@@ -1,7 +1,7 @@
-ARG IMAGE=intersystems/iris:2019.1.0S.111.0
-ARG IMAGE=store/intersystems/irishealth:2019.3.0.308.0-community
-ARG IMAGE=store/intersystems/iris-community:2019.3.0.309.0
-ARG IMAGE=store/intersystems/iris-community:2019.4.0.379.0
+ARG IMAGE=store/intersystems/iris-community:2021.1.0.215.3
+ARG IMAGE=store/intersystems/irishealth-community:2021.2.0.617.0
+ARG IMAGE=sstore/intersystems/iris-community:2021.1.0.215.3
+ARG IMAGE=store/intersystems/iris-community:2021.1.0.215.3
 FROM $IMAGE
 
 USER root

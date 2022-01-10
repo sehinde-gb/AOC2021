@@ -6,9 +6,13 @@ services:
       dockerfile: ${DOCKERFILE:-Dockerfile}
     restart: always
     ports: 
-      - 51773
+      - "9091:1972"
+      - "9092:52773"
       - ${IRIS_PORT}:52773
-      - 53773
+
+    
+    network_mode: "alpine-net"
+
     volumes:
       - ~/iris.key:/usr/irissys/mgr/iris.key
       - ./:/irisdev/app

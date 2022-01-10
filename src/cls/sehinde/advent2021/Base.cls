@@ -1,4 +1,4 @@
-Class eshvarov.Advent2019.Base
+Class sehinde.Advent2021.Base
 {
 
 Parameter Folder = "/irisdev/app/";
