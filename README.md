@@ -1,4 +1,4 @@
-## objectscript-adventofcode-template
+## Objectscript Advent of Code (2021) Template in use
 I am using a template to to craft solutions for [AdventofCode](https://adventofcode.com/2021) using InterSystems ObjectScript.
 
 ## Prerequisites
