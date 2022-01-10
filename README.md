@@ -4,6 +4,9 @@ I am using a template to to craft solutions for [AdventofCode](https://adventofc
 ## Prerequisites
 Please ensure that you have docker and git installed on your machine.
 
+## Organisation
+The files are within the directory src/cls/sehinde/advent2021 and underneath are a list of all the Days that were included in 2021's advent of code.
+
 
 ## Installation 
 
