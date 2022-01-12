@@ -3,17 +3,18 @@ Class sehinde.Advent2021.Day2 Extends sehinde.Advent2021.Base
 
 ClassMethod Import(dir As %String = "/usr/local/2021-2.txt") As %Status
 {
+#Include %occStatus
 
     // Open my text file and check it exists
 
     IF ##class(%File).Exists(dir) '=1 {
-
+        $$$ISERR
         write !, "Unable to Open: "_dir
 
         QUIT
 
     } ELSE { 
-
+        //$$$ISOK
         write "File: "_dir_" is open"
 
     }
@@ -42,7 +43,7 @@ ClassMethod Import(dir As %String = "/usr/local/2021-2.txt") As %Status
 
             write line,!
 
-            // Uses $Piece to extract lines using the space as a delimiter and assign them to an array called measurements
+            // Uses $Piece to extract lines using the space as a delimiter and assign them to an array called directions
 
             set directions(count)=$PIECE(line,delim,1,9)
             
@@ -54,13 +55,13 @@ ClassMethod Import(dir As %String = "/usr/local/2021-2.txt") As %Status
             
             write !,*32
 
-            write !, "The array is now set"
+            write !, "Our array has been set up"
 
             write !,*32
 
     
             //write !, "1st iteration of directions array ",$ZSTRIP(directions(1),"*P"),!
-            //write !, "Last iteration of measurements array ",$ZSTRIP(directions(1000),"*P"),!
+            //write !, "Last iteration of directions array ",$ZSTRIP(directions(1000),"*P"),!
 
             write !, "End of loop import process complete"
 
@@ -90,8 +91,6 @@ ClassMethod PartOne(ByRef directions As %ArrayOfDataTypes, ByRef count As %Integ
         Do {
             
             write "Iteration: ",count ,!
-
-            //write directions(count) ,!
 
             set direction(count) = $PIECE(directions(count),delim)
             set amount(count)= $PIECE(directions(count),delim,*)
@@ -129,7 +128,7 @@ ClassMethod PartOne(ByRef directions As %ArrayOfDataTypes, ByRef count As %Integ
         
             // Increment the counter until it reaches the limit of 10
             set count = $INCREMENT(count)
-            } While (count<11)
+            } While (count<1001)
 
             write "Forward total is: ", forwardsum,!
             write "Down total is: ", downsum,!
@@ -149,111 +148,79 @@ ClassMethod PartOne(ByRef directions As %ArrayOfDataTypes, ByRef count As %Integ
             //write number ,!
 }
 
-/// Description
+// Based on your calculations, the planned course doesn't seem to make any sense. 
+
+// You find the submarine manual and discover that the process is actually slightly more complicated.
+
 ClassMethod PartTwo(ByRef directions As %ArrayOfDataTypes, ByRef count As %Integer) As %Status
 {
-    set count=1
+
         set delim=" "
-        set counter=1
+        set count=1
         set direction=0
         set amount=0
-        set forwardsum=0
-        set downsum=0
-        set upsum=0
-        set hpos=0
         set depth=0
-        set total=0
-        set aimforward=0
+        set hopos=0
         set aim=0
-    
+        set total=0
+       
 
-        Do {
-            
-            write "Iteration: ",count ,!
+          
+            Do {
+                // Output the iterations number
+                write "Iteration: ",count ,!
 
-            //write directions(count) ,!
+                // Extract the direction separately from the numerical value
+                set direction(count) = $PIECE(directions(count),delim)
+                set amount(count)= $PIECE(directions(count),delim,*)
+                               
+                // Determine the direction the sub is heading and work out if the depth has changed or not.
+                // If it has been changed then output this and calculate the new depth.
+                if direction(count)="forward" {
+                    if aim=0 {
+                        write "Depth does not change" ,!
+                        write "Aim is: ", aim,!
+                        write direction(count) ,!
+                        write amount(count) ,!
+                        set hopos=amount(count)+hopos
+                        write "Horizontal position: ",hopos ,!
 
-            set direction(count) = $PIECE(directions(count),delim)
-            set amount(count)= $PIECE(directions(count),delim,*)
-            
-            
-            if direction(count)="forward"  {
-                write direction(count) ,!
-                write amount(count) ,!
-                
-                if aim=0 {
-                    write "Our depth hasn't change",!
+                    } else {
+                        write "Depth does change" ,!
+                        write "Aim was: ", aim,!
+                        write direction(count) ,!
+                        write amount(count) ,!
+                        set hopos=amount(count)+hopos
+                        write "Horizontal position: ",hopos ,! 
+                        set depth=amount(count)*aim
+                        write "Depth is: ", depth,!
+                    }                   
+                // If the direction is lower add the aim to the new depth    
+                } elseif direction(count)="down" {
+                        write direction(count) ,!
+                        write amount(count) ,!
+                        write "Aim was: ",aim,!
+                        set aim=aim+amount(count)
+                        write "Aim is: ",aim,!
+                        write "Horizontal position: ",hopos ,! 
+                        
+                // If the direction is higher subtract the aim from the new depth    
+                }elseif direction(count)="up" {
+                        write direction(count) ,!
+                        write amount(count) ,!
+                        write "Aim was: ",aim,!
+                        set aim=aim-amount(count)
+                        write "Aim is: ",aim ,!
+                        write "Horizontal position: ",hopos ,!                         
                 } else {
-                    write "Our depth has changed",!
+                    write "Something went wrong" ,!
                 }
-                
-                //write "Forwardsum: ",forwardsum ,!
-                //write "Amount: ",amount(count) ,!
-                //set aim = amount(count) * forwardsum
-                //write "Aim is: ",aim,!
-                set hpos=amount(count)+amount(count)
-                write "horizontal position: ", hpos,!
-            } elseif direction(count)="down" {
-                    write direction(count) ,!
-                    write amount(count) ,!
+                // Increment the counter until it reaches the limit of 1000
+                set count = $INCREMENT(count)
+            } While(count<1001)
 
-                    set downsum=amount(count)+downsum
-                    write "Downsum: ",downsum ,!
-                    set aim=aim+downsum
-                    
-                    write "Aim (down): ",aim,!
-
-            }elseif direction(count)="up" {
-                            write direction(count) ,!
-                            write amount(count) ,!
-            
-                            set upsum=amount(count)+upsum
-                            write "Upsum: ",upsum ,!
-
-                            set aim=aim-upsum
-                            write "Aim up: ",aim,!
-            } else {
-
-            }
-            
-                
-        
-            // Increment the counter until it reaches the limit of 10
-            set count = $INCREMENT(count)
-        }
-        While (count<11)
-            write aimdown ,!
-            write aimup,!
-            set aim= aimdown-aimup
-            write "aim ",aim,!
-
-            // write "Forward total is: ", forwardsum,!
-            // set aimforward = forwardsum
-            // write "aimforward total is: ", aimforward,!
-            
-            // write "Down total is: ", downsum,!
-            // set aimdown = downsum
-            // write "aimdown total is:", aimdown,!
-
-            // write "Up total is: ", upsum,!
-            // set aimup = upsum
-            // write "aimup total is:", aimup,!
-
-            // set aimsub = aimdown - aimup
-            // write "Aim subtracted: ", aimsub ,!
-
-            // #;set hpos=forwardsum
-            // #;write "My horizontal position is: ",hpos,!
-
-            // #;set depth= downsum-upsum
-            // #;write "My depth is: ",depth,!
-
-            // #;set total=hpos*depth
-            // #;write "The total is: ",total,!
-            
-            // //write $order(sum(""),-1)
-            // //set number=$order(sum(""),-1)
-            // //write number ,!
+            set total=hopos*depth
+            write "Total: ",total,!
 }
 
 }
