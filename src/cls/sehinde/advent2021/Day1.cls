@@ -43,7 +43,7 @@ ClassMethod Import(dir As %String = "/usr/local/2021-1.txt") As %Status
                 
                 
                 write !, "1st iteration of measurements array ",$ZSTRIP(measurements(1),"*P"),!
-                write !, "Last iteration of measurements array ",$ZSTRIP(measurements(2000),"*P"),!
+                //write !, "Last iteration of measurements array ",$ZSTRIP(measurements(2000),"*P"),!
                 
             
                 write !, "End of loop import process complete"

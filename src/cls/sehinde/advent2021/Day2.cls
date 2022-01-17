@@ -8,7 +8,7 @@ ClassMethod Import(dir As %String = "/usr/local/2021-2.txt") As %Status
     // Open my text file and check it exists
 
     IF ##class(%File).Exists(dir) '=1 {
-        $$$ISERR
+        //$$$ISERR
         write !, "Unable to Open: "_dir
 
         QUIT
@@ -88,7 +88,8 @@ ClassMethod PartOne(ByRef directions As %ArrayOfDataTypes, ByRef count As %Integ
         set total=0
     
 
-        Do {
+       While count<20
+       {
             
             write "Iteration: ",count ,!
 
@@ -128,7 +129,7 @@ ClassMethod PartOne(ByRef directions As %ArrayOfDataTypes, ByRef count As %Integ
         
             // Increment the counter until it reaches the limit of 10
             set count = $INCREMENT(count)
-            } While (count<1001)
+       }
 
             write "Forward total is: ", forwardsum,!
             write "Down total is: ", downsum,!
@@ -160,13 +161,13 @@ ClassMethod PartTwo(ByRef directions As %ArrayOfDataTypes, ByRef count As %Integ
         set direction=0
         set amount=0
         set depth=0
-        set hopos=0
+        set horizontal=0
         set aim=0
         set total=0
        
 
           
-            Do {
+          While count<1001 {
                 // Output the iterations number
                 write "Iteration: ",count ,!
 
@@ -175,26 +176,18 @@ ClassMethod PartTwo(ByRef directions As %ArrayOfDataTypes, ByRef count As %Integ
                 set amount(count)= $PIECE(directions(count),delim,*)
                                
                 // Determine the direction the sub is heading and work out if the depth has changed or not.
-                // If it has been changed then output this and calculate the new depth.
+                // Depth is calculated by addiing the depth to the aim multiplied by X(amount)
                 if direction(count)="forward" {
-                    if aim=0 {
-                        write "Depth does not change" ,!
-                        write "Aim is: ", aim,!
-                        write direction(count) ,!
-                        write amount(count) ,!
-                        set hopos=amount(count)+hopos
-                        write "Horizontal position: ",hopos ,!
 
-                    } else {
-                        write "Depth does change" ,!
                         write "Aim was: ", aim,!
                         write direction(count) ,!
                         write amount(count) ,!
-                        set hopos=amount(count)+hopos
-                        write "Horizontal position: ",hopos ,! 
-                        set depth=amount(count)*aim
+                        set horizontal=amount(count)+horizontal
+                        write "Horizontal position: ",horizontal ,! 
+                        set depth=depth+(aim*amount(count))
                         write "Depth is: ", depth,!
-                    }                   
+
+                    
                 // If the direction is lower add the aim to the new depth    
                 } elseif direction(count)="down" {
                         write direction(count) ,!
@@ -202,7 +195,7 @@ ClassMethod PartTwo(ByRef directions As %ArrayOfDataTypes, ByRef count As %Integ
                         write "Aim was: ",aim,!
                         set aim=aim+amount(count)
                         write "Aim is: ",aim,!
-                        write "Horizontal position: ",hopos ,! 
+                       
                         
                 // If the direction is higher subtract the aim from the new depth    
                 }elseif direction(count)="up" {
@@ -211,16 +204,21 @@ ClassMethod PartTwo(ByRef directions As %ArrayOfDataTypes, ByRef count As %Integ
                         write "Aim was: ",aim,!
                         set aim=aim-amount(count)
                         write "Aim is: ",aim ,!
-                        write "Horizontal position: ",hopos ,!                         
+                                          
                 } else {
                     write "Something went wrong" ,!
                 }
                 // Increment the counter until it reaches the limit of 1000
                 set count = $INCREMENT(count)
-            } While(count<1001)
+                
+            }
 
-            set total=hopos*depth
-            write "Total: ",total,!
+            write "Depth: ", depth ,!
+            write "Horizontal: ", horizontal,!
+            write "Aim: ", aim ,!
+
+            set final=horizontal*depth
+            write "Final: ", final,!
 }
 
 }
