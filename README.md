@@ -5,10 +5,10 @@
 
 ## I'm a Software Developer, Transport Enthusiast, Mentor and Coach!!
 
-- 🌱 I’m currently learning Intersystems Objecscript 🤣
+- 🌱 I’m currently learning Intersystems Objectscript 🤣
 - 👯 I’m looking to collaborate with other content creators
 - 🥅 2022 Goals: Contribute more to Open Source projects
-- ⚡ Fun fact: I love playing Squash, participating in Les Mills Body Pump
+- ⚡ Fun fact: I love playing Squash and participating in Les Mills Body Pump
 
 ### Connect with me:
 
