@@ -1,5 +1,46 @@
-Class sehinde.Advent2021.Day1 Extends sehinde.Advent2021.Base
+Class sehinde.Advent2019.Day1 Extends eshvarov.Advent2019.Base
 {
+
+Parameter InputFile = "input1.txt";
+
+ClassMethod Run(verbose = 1) As %Integer
+{
+    write "Hello ",!
+    set stream=..GetInput(..#InputFile)
+    //write stream,!
+    set sum=0
+	while 'stream.AtEnd {
+		set line=stream.ReadLine()
+        write line,!
+        set line=line\3-2
+        set sum=sum+line
+        write "line="_line," ","sum="_sum,!
+    }
+    return sum
+    //write sum,!
+}
+
+ClassMethod Run2(verbose = 0) As %Integer
+{
+        
+    set stream=..GetInput(..#InputFile)
+    set sum=0
+	while 'stream.AtEnd {
+		set line=stream.ReadLine()
+        set fuel=line
+        set full=0
+        for  {
+            set fuel=fuel\3-2
+            quit:fuel<0
+            set full=full+fuel
+            }  
+        set sum=sum+full
+        if verbose w "line="_line," ","sum="_sum,!
+    }
+    
+    return sum
+    write sum,!
+}
 
 ClassMethod Import(dir As %String = "/usr/local/2021-1.txt") As %Status
 {
@@ -168,40 +209,6 @@ ClassMethod PartTwo(ByRef measurements As %ArrayOfDataTypes, count As %Integer) 
                 }
 
 }
-}
-
-ClassMethod Run(verbose = 0) As %Integer
-{
-    set stream=..GetInput(..#InputFile)
-    set sum=0
-	while 'stream.AtEnd {
-		set line=stream.ReadLine()
-        set line=line\3-2
-        set sum=sum+line
-        if verbose w "line="_line," ","sum="_sum,!
-    }
-    return sum
-}
-
-ClassMethod Run2(verbose = 0) As %Integer
-{
-        
-    set stream=..GetInput(..#InputFile)
-    set sum=0
-	while 'stream.AtEnd {
-		set line=stream.ReadLine()
-        set fuel=line
-        set full=0
-        for  {
-            set fuel=fuel\3-2
-            quit:fuel<0
-            set full=full+fuel
-            }  
-        set sum=sum+full
-        if verbose w "line="_line," ","sum="_sum,!
-    }
-    
-    return sum
 }
 
 }
