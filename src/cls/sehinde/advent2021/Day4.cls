@@ -2,7 +2,7 @@ Class sehinde.Advent2021.Day4 Extends sehinde.Advent2021.Base
 {
 
 /// Description
-ClassMethod PartOne(dir As %String = "/usr/local/2021-4.txt") As %Status
+ClassMethod PartOne(dir As %String = "/usr/local/2021-4.txt") As %String
 {
    // Open the text file and check it exists
     If ##class(%File).Exists(dir) '=1 {
@@ -46,7 +46,7 @@ ClassMethod PartOne(dir As %String = "/usr/local/2021-4.txt") As %Status
 		for  {
             // order each board
 			set Board=$order(Boards(Board)) quit:Board=""
-            // assign the winning board to the sw variable
+            // assign the winning board to the boolean sw variable
 			set SW=..IsWinningBoard(.Boards,Board)
 			if SW {
 				set WinningBoard=Board
@@ -114,11 +114,11 @@ ClassMethod MarkBoards(ByRef Boards, DrawnNumber) As %Boolean [ Private ]
 		continue:Boards(Board)
 		set SW=1
 		for Row=1:1:5 {
-            // pull out each rown on the board and assign to rowData
+            // pull out each row on the board and assign to rowData
 			set RowData=Boards(Board,Row)
             //write RowData,!
 			for Column=1:1:5 {
-                // create a list from rowdata and columns and set this to numberdata
+                // go through the rows and columns and assign to numberdata
 				set NumberData=$list(RowData,Column)
                 //write NumberData,!
                 // compare each row against the drawn number
@@ -139,8 +139,10 @@ ClassMethod IsWinningBoard(ByRef Boards, Board) As %Boolean [ Private ]
 	set SW=0
 	for Row=1:1:5 {
 		set RowData=Boards(Board,Row)
+        // set boolean to yes and go through the columns
 		set SW=1
 		for Column=1:1:5 {
+            // for the columns set number data if encounters winning board otherwise no
 			set NumberData=$list(RowData,Column)
 			if $list(NumberData,2)=0 {
 				set SW=0
@@ -151,8 +153,10 @@ ClassMethod IsWinningBoard(ByRef Boards, Board) As %Boolean [ Private ]
 	}
 	quit:SW 1
 	for Column=1:1:5 {
+        // set boolean to yes and go through the rows
 		set SW=1
 		for Row=1:1:5 {
+              // For the rows set number data if encounters winning board otherwise no
 			set RowData=Boards(Board,Row)
 			set NumberData=$list(RowData,Column)
 			if $list(NumberData,2)=0 {
@@ -167,17 +171,76 @@ ClassMethod IsWinningBoard(ByRef Boards, Board) As %Boolean [ Private ]
 
 ClassMethod BoardSum(ByRef Boards, Board) As %Integer [ Private ]
 {
+    // go through the rows and columns in the collection
 	set Sum=0
 	for Row=1:1:5 {
 		set RowData=Boards(Board,Row)
 		for Column=1:1:5 {
+            // count the rows and columns that have been marked
 			set NumberData=$list(RowData,Column)
 			if $list(NumberData,2)=0 {
+                // count the numbers that have been marked
 				set Sum=Sum+$list(NumberData,1)
 			}
 		}
 	}
 	quit Sum
+}
+
+ClassMethod PartTwo(dir As %String = "/usr/local/2021-4.txt") As %String
+{
+
+    // Open the text file and check it exists
+    If ##class(%File).Exists(dir) '=1 {
+        write !, "Unable to Open: "_dir
+
+        QUIT
+
+    }ELSE { 
+        write "File: "_dir_" is open"
+
+    }
+
+    // instantiate a new class called file
+    set stream = ##class(%Stream.FileCharacter).%New()
+    // create a new variable called sc
+    set sc = stream.LinkToFile(dir)
+
+	
+    
+    set line=0
+	while 'stream.AtEnd {
+		set line=$INCREMENT(line)
+		set record=stream.ReadLine()
+		set recordsArr(line)=record
+	}
+
+	set DrawnNumbers=..GetData(.recordsArr,.Boards)
+	set Answer=""
+	for pos=1:1:$length(DrawnNumbers,",") {
+        // Extract each number with comma as delimiter and assign to drawnnumber
+		set DrawnNumber=$piece(DrawnNumbers,",",pos)
+        // quit if not passed to the markboard method this is the only difference between part 1 and 2
+		quit:'..MarkBoards(.Boards,DrawnNumber)
+		
+        set Board="",WinningBoard="",SW=0,LastDrawnNumber=DrawnNumber
+		for  {
+            // order boards
+			set Board=$order(Boards(Board)) quit:Board=""
+			continue:Boards(Board)
+            // assign the winning board to the boolean sw variable
+			set SW=..IsWinningBoard(.Boards,Board)
+			if SW {
+				set WinningBoard=Board,Boards(Board)=1
+				continue
+			}
+		}
+	}
+	set Sum=..BoardSum(.Boards,WinningBoard)
+	write !,"Sum=",Sum,", LastDrawnNumber=",LastDrawnNumber
+	set Answer=LastDrawnNumber*Sum
+    write "Answer: ",Answer,!
+	quit Answer
 }
 
 }
